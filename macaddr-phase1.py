@@ -7,7 +7,6 @@
 3. Grab mac addr and ip from each device and save it in a Dictionary
 4. Use Dictionary to perform Vendor MAC addr lookup
 
-***temp setup to remove myown ip in vendor lookup
 **still upgrading code as I type
 *Setup contains Network Automation docker connected to Few routers and Internet docker via Hub - using dhcp alloted ip's
 """
