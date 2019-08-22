@@ -1,0 +1,54 @@
+
+//AZURE PRIMARY ROUTER(jinja2 template)//
+
+
+set routing-instances ed instance-type virtual-router
+  
+//** set interface lo0 unit 2222 description lg_ASH_cust_ip #It must be already there in the router
+set interface lo0 unit 2222 family inet address 10.96.50.33/32
+ 
+  
+//** Tunnel to ATAN
+set interfaces gr-1/0/0 unit 2033 description tunga_50-033_ASH_cust1
+set interfaces gr-1/0/0 unit 2033 tunnel source 10.96.50.33
+set interfaces gr-1/0/0 unit 2033 tunnel destination 1.1.1.1
+set interfaces gr-1/0/0 unit 2033 tunnel routing-instance destination edge
+set interfaces gr-1/0/0 unit 2033 family inet address 169.254.181.2/32
+set routing-instances ed interface gr-1/0/0.2033
+ 
+set protocols oam gre-tunnel interface gr-1/0/0.2033 keepalive-time 5
+set protocols oam gre-tunnel interface gr-1/0/0.2033 hold-time 125
+ 
+//** BGP to ATAN
+set routing-instances ed routing-options autonomous-system 11179
+set routing-instances ed protocols bgp group ebgp type external
+set routing-instances ed protocols bgp group ebgp neighbor 169.254.181.1 multihop ttl 2
+set routing-instances ed protocols bgp group ebgp neighbor 169.254.181.1 description cust1-bgp-atan
+set routing-instances ed protocols bgp group ebgp neighbor 169.254.181.1 export ps-atan-out
+set routing-instances ed protocols bgp group ebgp neighbor 169.254.181.1 local-address 169.254.181.2
+set routing-instances ed protocols bgp group ebgp neighbor 169.254.181.1 peer-as 56278
+ 
+//** set policy-options policy-statement ps-atan-out term 10 then metric 10 # It must be already there in the router
+  
+set routing-instance ed routing-options static route 169.254.181.1/32 next-hop gr-1/0/0.2033
+edit routing-instance ed routing-options static  
+annotate route 169.254.181.1/32 "atan_bgp_peer_ip"
+
+
+
+//** Router subinterface configuration
+
+set interfaces xe-0/0/2 unit 3333 description vlan-3333_50-033_cust1
+set interfaces xe-0/0/2 unit 3333 vlan-id 3333
+set interfaces xe-0/0/2 unit 3333 family inet address 4.4.4.4/30
+set routing-instances ed interface xe-0/0/2.3333
+  
+//** BGP to CLOUD
+set routing-instances ed protocols bgp group ebgp type external
+set routing-instances ed protocols bgp group ebgp neighbor 4.4.4.3 description ed_pri
+set routing-instances ed protocols bgp group ebgp neighbor 4.4.4.3 local-address 4.4.4.4
+set routing-instances ed protocols bgp group ebgp neighbor 4.4.4.3 peer-as 12076
+set routing-instances ed protocols bgp group ebgp neighbor 4.4.4.3 export ps-ecx-out
+
+
+  
