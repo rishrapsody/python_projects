@@ -23,4 +23,4 @@ Are you looking for Azure or AWS config?: aws
 
 Please enter AWS password: qwerty
 
-****Your router config is ready and saved in same directory in format 'cloudtype_routerconfig_currenttime.txt****
+*****Your router config is ready and saved in same directory as 'ikev2_routerconfig_2019-08-24-03-37-17.txt'*****
