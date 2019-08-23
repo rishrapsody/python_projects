@@ -1,4 +1,4 @@
-This is Help section.
+This is Help section. The script can be used to generate AWS/Azure/Ikev2 Router config for both(Primary and Secondary Rtr) 
 Please provide the inputs as per Standard Operation Procedure.
 
 Sample:
